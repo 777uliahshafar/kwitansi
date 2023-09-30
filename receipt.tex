@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{datatool}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{latexsym}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\usepackage[a6paper, margin=10mm, landscape]{geometry}
+
+% ------------- | ---------- Please enter the bill number you want to print
+\def \query {150823}
+% ---------------------------------------------------------------------------------
+
+\begin{document}
+\thispagestyle{empty}
+\pagecolor{yellow!25}
+\begin{tikzpicture}[overlay,remember picture]
+	\draw [line width=1.0pt,rounded corners=10pt,]
+	($ (current page.north west) + (5mm,-5mm) $)
+	rectangle
+	($ (current page.south east) + (-5mm,5mm) $);
+\end{tikzpicture}
+\begin{tikzpicture}[overlay,remember picture]
+	\draw [line width=1.0pt,rounded corners=10pt,]
+	($ (current page.north west) + (15mm,-10mm) $)
+	rectangle
+	($ (current page.south east) + (-105mm,65mm) $);
+	\node at (-3.40,-1) {\includegraphics[width=2.5cm, height=2cm]{logo}};
+\end{tikzpicture}
+{\centering
+{\bf \LARGE Kost Ada}\\[2.5mm]
+Jl. Handayani No. 7\\
+Telepon: 0812 425 0844 \\
+\vspace{42pt}
+{\bf \Large Kwitansi}\hfill$\overline{\text{tanda tangan   }}$\\[10mm]
+}
+\DTLloaddb{database}{database.csv}
+
+\DTLforeach*[\DTLiseq{\billnumber}{\query}]{database}{%
+	\billnumber=BillNumber,\firstname=FirstName,\surname=Surname,\address=Address,\billdate=Date,\amount=Amount}{%
+	\noindent {\bf No.} \billnumber \hfill {\bf Tanggal:} \billdate \vfill
+	\noindent Telah terima dari\hfill \firstname{ }\surname\hfill , Uang sejumlah {\Large Rp.\amount} \vfill
+	\noindent Untuk pembayaran sewa kos satu bulan \hfill dibayar tunai~$\blacksquare$~/~transfer~$\square$\vfill
+	% \noindent{\bf Alamat:} \address\vfill
+}
+
+\end{document}
